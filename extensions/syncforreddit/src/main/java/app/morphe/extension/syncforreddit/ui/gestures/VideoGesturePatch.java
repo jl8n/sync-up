@@ -233,6 +233,12 @@ public final class VideoGesturePatch {
             if (doing != UNDECIDED && doing != PASSED_ON) {
                 return null;
             }
+            if (doing == PASSED_ON && afterDoubleTap) {
+                // The second tap was handed on because no double tap gesture of ours is on, so
+                // the drag after it is the zoom's: holding the second tap and dragging is how
+                // the picture is zoomed with one finger.
+                return null;
+            }
 
             float sideways = event.getX() - downX;
             float upOrDown = event.getY() - downY;
@@ -394,7 +400,30 @@ public final class VideoGesturePatch {
             if (player.getDuration() <= 0) {
                 return false;
             }
+            if (zoomedIn()) {
+                // A sideways drag on a zoomed picture moves around in it.
+                return false;
+            }
             return when == VideoGestureSettings.SEEK_ANYWHERE || !inSomethingThatPages();
+        }
+
+        /**
+         * Whether the picture is zoomed in, read from the transform on the view it is drawn on.
+         * Sync fits the video by shrinking one side of that transform and leaving the other at
+         * one, and zooms by scaling the whole of it, so either side above one means zoomed.
+         */
+        private boolean zoomedIn() {
+            View drawnOn = childOf(player);
+            if (!(drawnOn instanceof android.view.TextureView)) {
+                return false;
+            }
+            android.graphics.Matrix transform =
+                    ((android.view.TextureView) drawnOn).getTransform(null);
+            float[] values = new float[9];
+            transform.getValues(values);
+            float scale = Math.max(values[android.graphics.Matrix.MSCALE_X],
+                    values[android.graphics.Matrix.MSCALE_Y]);
+            return scale > 1.01f;
         }
 
         /**
