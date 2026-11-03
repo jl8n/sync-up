@@ -360,7 +360,9 @@ service being asked.
     proxy for that picture and the proxy refuses everything now, so every preview but a video's
     came out as a broken image. The page is read instead and asked which picture it names for
     being quoted, which is what pages have carried in their head for years. What each page
-    answers is remembered, so a thread full of links to one place asks it once.
+    answers is remembered, so a thread full of links to one place asks it once. A page that
+    names no picture is answered without asking the proxy, its card shows the link's icon
+    rather than a broken picture, and once it is known to have none it is drawn as a link.
   - **Reading text out of an image**, **tagging a user**,
     **following a link past Google's copy of a page**, **opening the app logged out**, and the
     joke-link bypass. Each still obeys its own setting; the patch only answers the questions
@@ -374,6 +376,13 @@ service being asked.
     replaced rather than unlocked — see *Translation* above.
   - The **Sync Ultra screen is removed** from settings, along with the cloud backup section that
     needed it and the offer to buy it in the account switcher.
+
+#### Flair
+
+- **Fix flair colors** — Sync reads a flair's color with Android's parser, which refuses
+  `transparent`, three digit colors and colors written without their `#`. Sync caught that and
+  set no color at all, so a recycled row kept the flair color of the post drawn there before.
+  Such colors are made readable first, and one that cannot be is left to the theme.
 
 #### Backup
 
