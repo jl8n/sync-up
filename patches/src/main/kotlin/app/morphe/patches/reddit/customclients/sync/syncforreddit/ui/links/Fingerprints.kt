@@ -35,3 +35,15 @@ internal val youTubeActivityCreatedFingerprint = Fingerprint(
         classDef.type == YOUTUBE_ACTIVITY_CLASS && method.name == "onCreate"
     },
 )
+
+/**
+ * Reads a YouTube video's id out of an address, `LinkHandler.v(String)`. Thumbnails are built
+ * from what it returns.
+ */
+internal val youTubeIdFingerprint = Fingerprint(
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC),
+    parameters = listOf("Ljava/lang/String;"),
+    returnType = "Ljava/lang/String;",
+    strings = listOf("getYouTubeId"),
+    custom = { _, classDef -> classDef.sourceFile == "LinkHandler.java" },
+)

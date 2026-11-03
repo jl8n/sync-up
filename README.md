@@ -402,6 +402,10 @@ service being asked.
   and offers to install YouTube from the Play Store. The link is handed to the YouTube app, or
   whatever else opens YouTube links, as the player opens. Unchecking *YouTube videos* under
   Sync's *Links* settings does the same without the patch.
+- **Fix YouTube thumbnails** — Sync reads a video's id only from `v=`, `/v/` and `youtu.be/`,
+  and for any other youtube.com address used the whole address as the id, so a live stream,
+  Short or embed got a thumbnail address that drew nothing. The id is read from the path of
+  `/live/`, `/shorts/`, `/embed/` and `/e/` addresses first.
 
 #### Other
 
