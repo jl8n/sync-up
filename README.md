@@ -397,11 +397,19 @@ service being asked.
   straight back to Sync. Only that case is changed: the link goes to the default browser, or to
   a chooser with Sync left out of it where there is none. A link another app takes, such as a
   YouTube link, is still sent the way Sync sends it.
-- **Open YouTube links in YouTube** — Sync plays YouTube links in its own player, built on the
+- **Play YouTube links in Sync** — Sync plays YouTube links in its own player, built on the
   YouTube Android Player API, which the YouTube app no longer serves; the player fails to start
-  and offers to install YouTube from the Play Store. The link is handed to the YouTube app, or
-  whatever else opens YouTube links, as the player opens. Unchecking *YouTube videos* under
-  Sync's *Links* settings does the same without the patch.
+  and offers to install YouTube from the Play Store. YouTube's embedded player, the one web pages
+  use, plays the video in its place, full screen included, starting where a `t=` asks and
+  playing a playlist where the link names one. The page it is loaded in is given an address
+  made from the app's package, since the embed refuses a page that does not say where it is.
+  - Where the embed cannot play it — the uploader has turned embedding off, the video is gone,
+    or the link is a channel or its live page — the link goes to the YouTube app instead, and
+    *Open in YouTube* at the top does the same at any time.
+  - Tapping the black around the video, the close button or back closes it; back leaves full
+    screen first.
+  - Unchecking *YouTube videos* under Sync's *Links* settings sends every YouTube link to the
+    YouTube app, as before.
 - **Fix YouTube thumbnails** — Sync reads a video's id only from `v=`, `/v/` and `youtu.be/`,
   and for any other youtube.com address used the whole address as the id, so a live stream,
   Short or embed got a thumbnail address that drew nothing. The id is read from the path of
