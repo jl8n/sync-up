@@ -67,6 +67,11 @@ public final class SubredditBanners {
 
     private static volatile String userAgent;
 
+    /** Names that read as a subreddit but are feeds of others, with no banner of their own. */
+    private static final java.util.Set<String> NOT_A_SUBREDDIT = new java.util.HashSet<>(
+            java.util.Arrays.asList("all", "popular", "friends", "mod", "random", "randnsfw",
+                    "myrandom", "frontpage", "home"));
+
     /** What the feed showing now is about, recorded where Sync hands it over. */
     private static volatile String showing;
 
@@ -324,6 +329,10 @@ public final class SubredditBanners {
         }
         // A feed of several subreddits, or a front page, has no banner of its own.
         if (named.isEmpty() || named.contains("+") || named.contains("/")) {
+            return null;
+        }
+        // Feeds Reddit makes up out of other subreddits, which it answers about with a 404.
+        if (NOT_A_SUBREDDIT.contains(named.toLowerCase(Locale.ROOT))) {
             return null;
         }
         return named;
