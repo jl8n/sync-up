@@ -299,6 +299,10 @@ service being asked.
     screen where a stray drag would be unwelcome.
   - Volume moves the device's own volume, in the steps the device has.
   - A long press still shows and hides the viewer's controls, as it does without the patch.
+  - A drag that begins on the second tap of a double tap is left to the zoom whenever no
+    double tap gesture is on, since holding the second tap and dragging is how the picture is
+    zoomed with one finger. A sideways drag on a picture already zoomed in moves around in it
+    rather than seeking.
 
 #### Translation
 
@@ -370,6 +374,19 @@ service being asked.
     replaced rather than unlocked — see *Translation* above.
   - The **Sync Ultra screen is removed** from settings, along with the cloud backup section that
     needed it and the offer to buy it in the account switcher.
+
+#### Links
+
+- **Open in browser opens a browser** — Sync opens a link "externally" without naming an app,
+  so when Sync is the app the system opens Reddit links in, *Open in browser* on a post came
+  straight back to Sync. Only that case is changed: the link goes to the default browser, or to
+  a chooser with Sync left out of it where there is none. A link another app takes, such as a
+  YouTube link, is still sent the way Sync sends it.
+- **Open YouTube links in YouTube** — Sync plays YouTube links in its own player, built on the
+  YouTube Android Player API, which the YouTube app no longer serves; the player fails to start
+  and offers to install YouTube from the Play Store. The link is handed to the YouTube app, or
+  whatever else opens YouTube links, as the player opens. Unchecking *YouTube videos* under
+  Sync's *Links* settings does the same without the patch.
 
 #### Other
 
