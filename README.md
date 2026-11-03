@@ -375,6 +375,21 @@ service being asked.
   - The **Sync Ultra screen is removed** from settings, along with the cloud backup section that
     needed it and the offer to buy it in the account switcher.
 
+#### Backup
+
+- **Back up accounts** — Sync keeps its accounts in its database rather than among its settings,
+  and its backup writes only the settings in use, so a restore after a reinstall brought back
+  none of the accounts and only one set of settings. When there are accounts to save, *Backup
+  now* asks whether to include them, with a passphrase. If so, every account's sign-in and its
+  own settings go into the backup as one section, encrypted with AES-GCM under a key derived
+  from the passphrase (PBKDF2, 210,000 rounds). *Restore from backup* asks for the passphrase,
+  adds every account not already signed in, and writes each account's settings back. *Settings
+  only* makes the backup Sync always made.
+  - A sign-in is a refresh token, which keeps the account signed in until it is revoked under
+    *Apps* in Reddit's preferences, and only works with the client ID it was issued to: restore
+    onto a copy patched with the same `client-id`.
+  - Without the passphrase the accounts cannot be read back. Sync's own settings beside them can.
+
 #### Links
 
 - **Open in browser opens a browser** — Sync opens a link "externally" without naming an app,

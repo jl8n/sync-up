@@ -14,4 +14,7 @@ public class RedditProvider {
 
     /** What is told that something changed. */
     public static final Uri B = null;
+
+    /** The signed in accounts, one row each in {@code tbl_accounts}. */
+    public static final Uri S = null;
 }
