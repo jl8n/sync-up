@@ -171,6 +171,22 @@ val unlockUltraPatch = bytecodePatch(
 
         // Showing a preview of a website asks all three and then asks the setting for it. Only
         // the setting is worth asking, so it is asked on its own.
+        // A card whose picture fails draws the link's own icon, as it does while loading, rather
+        // than a broken picture. The flag it sets chooses between the two and nothing else.
+        Fingerprint(
+            parameters = listOf("Landroid/graphics/drawable/Drawable;"),
+            returnType = "V",
+            strings = listOf("Load failed: "),
+            custom = { _, classDef -> classDef.sourceFile == "WebPreviewImageSpan.java" },
+        ).method.apply {
+            val failed = getInstruction(0)
+            if (failed.opcode != Opcode.CONST_4 || getInstruction(1).opcode != Opcode.IPUT_BOOLEAN) {
+                throw PatchException("The preview's failure no longer starts by setting its flag")
+            }
+            val register = (failed as OneRegisterInstruction).registerA
+            replaceInstruction(0, "const/4 v$register, 0x0")
+        }
+
         mutableClassDefBy(DECIDES_A_PREVIEW).methods
             .single { it.name == "a" && it.parameters.size == 1 && it.returnType == "Z" }
             .addInstructions(

@@ -45,6 +45,11 @@ public final class UltraFeatures {
                 .claimsAsMedia(url)) {
             return false;
         }
+        // A page already read and found to name no picture would only be an empty card.
+        if (app.morphe.extension.syncforreddit.http.posts.WebsitePreviewImagePatch
+                .namesNoPicture(url)) {
+            return false;
+        }
         try {
             SharedPreferences settings =
                     TranslationSettings.store(Utils.getContext());

@@ -18,6 +18,9 @@ import app.morphe.extension.shared.Logger;
 import app.morphe.extension.shared.requests.PatchedditInterceptor;
 
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.Protocol;
+import okhttp3.ResponseBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -114,8 +117,16 @@ public class WebsitePreviewImagePatch extends PatchedditInterceptor {
         if (picture == null) {
             // The page names none, or would not be read. What the proxy says is what it has
             // always said, which is what was drawn before any of this.
+            // Answered here: the proxy only ever answers 401 now, which Sync draws as a broken
+            // picture. A link card whose picture fails shows the link's own icon instead.
             Logger.printInfo(() -> "No picture named by " + page);
-            return chain.proceed(request);
+            return new Response.Builder()
+                    .request(request)
+                    .protocol(Protocol.HTTP_1_1)
+                    .code(HttpURLConnection.HTTP_NOT_FOUND)
+                    .message("No picture")
+                    .body(ResponseBody.create(new byte[0], MediaType.get("text/plain")))
+                    .build();
         }
 
         HttpUrl instead = HttpUrl.parse(picture);
@@ -126,6 +137,14 @@ public class WebsitePreviewImagePatch extends PatchedditInterceptor {
         }
 
         return chain.proceed(request.newBuilder().url(instead).build());
+    }
+
+    /**
+     * Whether a page is already known to name no picture, so a link to it is better drawn as a
+     * link than as a card with nothing in it. Only what has been read this session is known.
+     */
+    public static boolean namesNoPicture(String page) {
+        return page != null && NAMED_NONE.equals(named.get(page));
     }
 
     /** @return The picture the page names for being quoted, or null where it names none. */
