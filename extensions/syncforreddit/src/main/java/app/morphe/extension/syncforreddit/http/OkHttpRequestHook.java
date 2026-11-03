@@ -63,6 +63,10 @@ public class OkHttpRequestHook extends BaseOkHttpRequestHook {
         for (Interceptor interceptor : HOOK.getNetworkInterceptors()) {
             builder.addNetworkInterceptor(interceptor);
         }
+        if (app.morphe.extension.syncforreddit.diagnostics.DiagnosticLogging.isPatchIncluded()) {
+            builder.addNetworkInterceptor(
+                    app.morphe.extension.syncforreddit.diagnostics.DiagnosticLogging.HTTP);
+        }
     }
 
     public static void init() {
